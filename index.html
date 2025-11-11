@@ -46,9 +46,9 @@
   const stripe = Stripe("pk_test_51RoZXfH4iReDKpeMyaPoyRU44hRqCDjQdLdw8Ala5gFdDYeCTSY1TeoxzxkcMxAG3RnOF2AoYTtOvBLOAsDwq56p00WiW0oT3i");
   const stripeContainer = document.getElementById("stripe-button-container");
   stripeContainer.innerHTML = `
-    <button id="stripe-button" class="flex items-center justify-center gap-2 bg-[#6772E5] hover:bg-[#5469d4] text-white font-semibold px-4 py-2 rounded w-full h-12 text-sm">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-4" alt="Visa">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" class="h-4" alt="Mastercard">
+    <button id="stripe-button" class="flex items-center justify-center gap-2 bg-[#6772E5] hover:bg-[#5469d4] text-white font-semibold px-4 py-1 rounded w-full h-4 text-sm">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-2" alt="Visa">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" class="h-2" alt="Mastercard">
       Pay with Card
     </button>
   `;
@@ -63,7 +63,7 @@
   script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
   script.onload = () => {
     paypal.Buttons({
-      style: { layout: 'horizontal', color: 'gold', shape: 'pill', height: 40, tagline: false },
+      style: { layout: 'horizontal', color: 'gold', shape: 'pill', height: 20, tagline: false },
       createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: '449.00' } }] }),
       onApprove: (data, actions) => actions.order.capture().then(details => alert("Payment completed! Transaction ID: " + details.id)),
       onCancel: () => alert("Payment cancelled"),
