@@ -13,32 +13,28 @@
   .footer-links a { color: #D4AF37; text-decoration: underline; }
 </style>
 </head>
-<body><div class="max-w-md mx-auto p-6 bg-[#2b1f38] rounded-xl shadow-lg text-center space-y-4">
+<div class="max-w-md mx-auto p-6 bg-[#2b1f38] rounded-xl shadow-lg text-center space-y-4">
   <h2 class="text-3xl font-bold text-[#D4AF37] mb-2">Diamond Plan</h2>
   <p class="text-lg text-white font-semibold mb-6">$449 - Full Access</p>
 
-  <!-- PayPal Button -->
-  <a href="https://www.paypal.com/ncp/payment/S77ESJWSU79JU" target="_blank"
-     class="flex items-center justify-center gap-2 w-full py-3 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
-    <img src="/logos/paypal.svg" alt="PayPal" class="h-5" />
-    Pay with PayPal
-  </a>
+  <!-- PayPal SDK Button (official logo + popup) -->
+  <div id="paypal-button-container"></div>
 
-  <!-- Paystack Button -->
+  <!-- Paystack Button (inline popup with logo) -->
   <button onclick="payWithPaystack()"
      class="flex items-center justify-center gap-2 w-full py-3 bg-purple-600 text-white font-semibold rounded hover:bg-purple-700 transition">
     <img src="/logos/paystack.svg" alt="Paystack" class="h-5" />
     Pay with Paystack
   </button>
 
-  <!-- Stripe Button -->
+  <!-- Stripe Button (redirect with logo) -->
   <a href="https://buy.stripe.com/eVq6oH0MO4Bm7Kifyi7Zu01" target="_blank"
      class="flex items-center justify-center gap-2 w-full py-3 bg-[#6772E5] text-white font-semibold rounded hover:bg-[#5469d4] transition">
     <img src="/logos/stripe.svg" alt="Stripe" class="h-5" />
     Pay with Stripe
   </a>
 
-  <!-- Optional Card Logos -->
+  <!-- Card Logos -->
   <div class="flex justify-center gap-4 mt-4">
     <img src="/logos/visa.svg" alt="Visa" class="h-6 opacity-80" />
     <img src="/logos/mastercard.svg" alt="MasterCard" class="h-6 opacity-80" />
@@ -46,23 +42,39 @@
   </div>
 </div>
 
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=BAAQcVUbEKNwGhzFE9XggYcsAry02fNwd-m6U9NWdtWD_BwquRJLbZZUjvmDZBDp6rnL9i6Twm85ZLO-14&currency=USD"></script>
+<script>
+paypal.Buttons({
+    style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'paypal' },
+    createOrder: function(data, actions) {
+        return actions.order.create({ purchase_units: [{ amount: { value: '449.00' } }] });
+    },
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+            alert('Payment completed by ' + details.payer.name.given_name);
+        });
+    }
+}).render('#paypal-button-container');
+</script>
+
 <!-- Paystack Script -->
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
-  function payWithPaystack(){
+function payWithPaystack() {
     var handler = PaystackPop.setup({
-      key: 'pk_live_7ffc2b84bc78834772aa6300d0cc489a06e5df76',
-      email: 'customer@example.com', // replace dynamically
-      amount: 44900, // $449 in kobo if NGN
-      currency: 'USD',
-      ref: '' + Math.floor(Math.random() * 1000000000 + 1),
-      callback: function(response){
-        alert('Payment successful! Ref: ' + response.reference);
-      },
-      onClose: function(){
-        alert('Payment cancelled');
-      }
+        key: 'pk_live_7ffc2b84bc78834772aa6300d0cc489a06e5df76',
+        email: 'customer@example.com', // replace dynamically
+        amount: 44900, // $449
+        currency: 'USD',
+        ref: '' + Math.floor(Math.random() * 1000000000 + 1),
+        callback: function(response) {
+            alert('Payment successful! Ref: ' + response.reference);
+        },
+        onClose: function() {
+            alert('Payment cancelled');
+        }
     });
     handler.openIframe();
-  }
+}
 </script>
