@@ -1,9 +1,15 @@
-<!-- Diamond Plan Embed Snippet -->
-<div class="max-w-md mx-auto bg-[#3D2C41] p-8 rounded-2xl shadow-xl text-center text-white">
-  <h2 class="text-3xl font-bold mb-2 text-[#D4AF37]">Diamond Plan</h2>
-  <p class="text-lg mb-6 font-semibold">$449 - Full Access</p>
+<!-- Diamond Plan - FINAL & Clean -->
+<div class="max-w-md mx-auto bg-[#3D2C41] p-6 rounded-2xl shadow-xl text-center text-white">
+  
+  <!-- Diamond Benefits -->
+  <div class="bg-[#D4AF37] text-[#3D2C41] font-semibold py-2 px-4 rounded mb-4 text-sm md:text-base">
+    Unlock everything: unlimited videos, priority support, exclusive templates, early access to new features!
+  </div>
 
-  <ul class="text-left list-disc list-inside mb-8 text-gray-300 text-sm">
+  <h2 class="text-3xl font-bold mb-2 text-[#D4AF37]">Diamond Plan</h2>
+  <p class="text-lg mb-4 font-semibold">$449 - Full Access</p>
+
+  <ul class="text-left list-disc list-inside mb-6 text-gray-300 text-sm">
     <li>Unlimited access to all premium features</li>
     <li>High-quality video generation</li>
     <li>Priority support</li>
@@ -12,19 +18,23 @@
   </ul>
 
   <div class="flex flex-col gap-3">
-    <div id="paypal-button-container" class="w-full h-12"></div>
+    <!-- PayPal -->
+    <div id="paypal-button-container" class="w-full"></div>
 
-    <div id="stripe-button-container" class="w-full h-12"></div>
+    <!-- Stripe -->
+    <div id="stripe-button-container" class="w-full"></div>
 
+    <!-- Paystack -->
     <a href="https://paystack.shop/pay/4u6jdu7eft"
-       class="flex items-center justify-center gap-2 bg-[#3DA58A] hover:bg-[#2f8a74] text-white font-semibold px-4 py-2 rounded w-full h-12">
-       <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Paystack_logo.png" class="h-5" alt="Paystack">
+       class="flex items-center justify-center gap-2 bg-[#3DA58A] hover:bg-[#2f8a74] text-white font-semibold px-4 py-2 rounded w-full h-12 text-sm">
+       <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Paystack_logo.png" class="h-4" alt="Paystack">
        Pay with Paystack
     </a>
 
+    <!-- M-PESA -->
     <button onclick="alert('Send payment to 0113554446 via M-PESA')"
-      class="flex items-center justify-center gap-2 bg-[#FFA500] hover:bg-[#e69500] text-white font-semibold px-4 py-2 rounded w-full h-12">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/8/88/M-Pesa_Logo.svg" class="h-5" alt="M-PESA">
+      class="flex items-center justify-center gap-2 bg-[#FFA500] hover:bg-[#e69500] text-white font-semibold px-4 py-2 rounded w-full h-12 text-sm">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/88/M-Pesa_Logo.svg" class="h-4" alt="M-PESA">
       Pay with M-PESA
     </button>
   </div>
@@ -32,19 +42,19 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-  // Stripe Inline Checkout Popup
+  // Stripe Inline Checkout
   const stripe = Stripe("pk_test_51RoZXfH4iReDKpeMyaPoyRU44hRqCDjQdLdw8Ala5gFdDYeCTSY1TeoxzxkcMxAG3RnOF2AoYTtOvBLOAsDwq56p00WiW0oT3i");
-  const stripeButtonContainer = document.getElementById("stripe-button-container");
-  stripeButtonContainer.innerHTML = `
-    <button id="stripe-inline-button" class="flex items-center justify-center gap-2 bg-[#6772E5] hover:bg-[#5469d4] text-white font-semibold px-4 py-2 rounded w-full h-12">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-5" alt="Visa">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" class="h-5" alt="Mastercard">
+  const stripeContainer = document.getElementById("stripe-button-container");
+  stripeContainer.innerHTML = `
+    <button id="stripe-button" class="flex items-center justify-center gap-2 bg-[#6772E5] hover:bg-[#5469d4] text-white font-semibold px-4 py-2 rounded w-full h-12 text-sm">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-4" alt="Visa">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" class="h-4" alt="Mastercard">
       Pay with Card
     </button>
   `;
-  document.getElementById("stripe-inline-button").addEventListener("click", () => {
-    const testSessionLink = "https://buy.stripe.com/test_session_id"; // replace with your real Stripe session
-    window.open(testSessionLink, "stripe-popup", "width=500,height=700");
+  document.getElementById("stripe-button").addEventListener("click", () => {
+    const sessionLink = "https://buy.stripe.com/test_session_id"; // replace with real Stripe session
+    window.open(sessionLink, "stripe-popup", "width=500,height=700");
   });
 
   // PayPal SDK
@@ -53,7 +63,7 @@
   script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
   script.onload = () => {
     paypal.Buttons({
-      style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'paypal', height: 45, tagline: false },
+      style: { layout: 'horizontal', color: 'gold', shape: 'pill', height: 40, tagline: false },
       createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: '449.00' } }] }),
       onApprove: (data, actions) => actions.order.capture().then(details => alert("Payment completed! Transaction ID: " + details.id)),
       onCancel: () => alert("Payment cancelled"),
