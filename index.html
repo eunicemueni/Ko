@@ -13,85 +13,72 @@
   .footer-links a { color: #D4AF37; text-decoration: underline; }
 </style>
 </head>
-<div class="max-w-md mx-auto p-6 bg-[#2b1f38] rounded-xl shadow-lg text-center space-y-6">
+div class="max-w-md mx-auto p-6 bg-[#2b1f38] rounded-xl shadow-lg text-center space-y-6">
   <!-- Plan Title & Price -->
   <h2 class="text-3xl font-bold text-[#D4AF37] mb-2">Diamond Plan</h2>
   <p class="text-lg text-white font-semibold">$449 - Full Access</p>
+<!-- Diamond Plan Section -->
+<div class="max-w-md mx-auto bg-[#3D2C41] p-8 rounded-2xl shadow-xl text-center text-white">
+  <h2 class="text-3xl font-bold mb-2 text-[#D4AF37]">Diamond Plan</h2>
+  <p class="text-lg mb-6 font-semibold">$449 - Full Access</p>
 
-  <!-- Diamond Plan Features -->
-  <ul class="text-left text-gray-200 list-disc list-inside mb-6 space-y-1">
-    <li>All features in Pro Plan</li>
-    <li>Unlimited video generation</li>
-    <li>Access to premium templates & scripts</li>
-    <li>Priority support</li>
-    <li>Exclusive viral growth tools</li>
-    <li>Early access to Kairah Studio updates</li>
+  <!-- Plan Features -->
+  <ul class="text-left list-disc list-inside mb-8 text-gray-300">
+    <li>✅ Unlimited access to all premium features</li>
+    <li>✅ High-quality video generation</li>
+    <li>✅ Priority support</li>
+    <li>✅ Exclusive templates & prompts</li>
+    <li>✅ Access to new features before release</li>
   </ul>
 
-  <!-- Payment Buttons -->
-  <div class="space-y-4">
+  <!-- PayPal Button -->
+  <div id="paypal-button-container" class="mb-4"></div>
 
-    <!-- PayPal SDK Button (official logo + popup) -->
-    <div id="paypal-button-container"></div>
-
-    <!-- Paystack Button (inline popup with logo) -->
-    <button onclick="payWithPaystack()"
-       class="flex items-center justify-center gap-2 w-full py-3 bg-purple-600 text-white font-semibold rounded hover:bg-purple-700 transition">
-      <img src="/logos/paystack.svg" alt="Paystack" class="h-5" />
-      Pay with Paystack
-    </button>
-
-    <!-- Stripe Button (redirect with logo) -->
-    <a href="https://buy.stripe.com/eVq6oH0MO4Bm7Kifyi7Zu01" target="_blank"
-       class="flex items-center justify-center gap-2 w-full py-3 bg-[#6772E5] text-white font-semibold rounded hover:bg-[#5469d4] transition">
-      <img src="/logos/stripe.svg" alt="Stripe" class="h-5" />
-      Pay with Stripe
-    </a>
-  </div>
-
-  <!-- Optional Card Logos -->
-  <div class="flex justify-center gap-4 mt-4">
-    <img src="/logos/visa.svg" alt="Visa" class="h-6 opacity-80" />
-    <img src="/logos/mastercard.svg" alt="MasterCard" class="h-6 opacity-80" />
-    <img src="/logos/amex.svg" alt="Amex" class="h-6 opacity-80" />
-  </div>
+  <!-- Stripe Inline Button -->
+  <button id="stripe-button"
+    class="flex items-center justify-center gap-2 bg-[#6772E5] hover:bg-[#5469d4] text-white font-semibold px-6 py-3 rounded mb-4 mx-auto">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-5" alt="Visa">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" class="h-5" alt="Mastercard">
+    Pay with Card (Stripe)
+  </button>
 </div>
 
-<!-- ===== PayPal SDK ===== -->
-<script src="https://www.paypal.com/sdk/js?client-id=BAAQcVUbEKNwGhzFE9XggYcsAry02fNwd-m6U9NWdtWD_BwquRJLbZZUjvmDZBDp6rnL9i6Twm85ZLO-14&currency=USD"></script>
+<!-- Stripe JS -->
+<script src="https://js.stripe.com/v3/"></script>
 <script>
-paypal.Buttons({
-    style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'paypal' },
-    createOrder: function(data, actions) {
-        return actions.order.create({
-            purchase_units: [{ amount: { value: '449.00' } }] // Diamond $449
-        });
-    },
-    onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-            alert('Payment completed by ' + details.payer.name.given_name);
-        });
-    }
-}).render('#paypal-button-container');
-</script>
+  const stripe = Stripe("pk_test_51RoZXfH4iReDKpeMyaPoyRU44hRqCDjQdLdw8Ala5gFdDYeCTSY1TeoxzxkcMxAG3RnOF2AoYTtOvBLOAsDwq56p00WiW0oT3i");
 
-<!-- ===== Paystack Inline Popup ===== -->
-<script src="https://js.paystack.co/v1/inline.js"></script>
-<script>
-function payWithPaystack() {
-    var handler = PaystackPop.setup({
-        key: 'pk_live_7ffc2b84bc78834772aa6300d0cc489a06e5df76', // live key
-        email: 'customer@example.com', // replace dynamically
-        amount: 44900, // $449 in kobo
-        currency: 'USD',
-        ref: '' + Math.floor(Math.random() * 1000000000 + 1), // unique reference
-        callback: function(response) {
-            alert('Payment successful! Ref: ' + response.reference);
-        },
-        onClose: function() {
-            alert('Payment cancelled');
-        }
+  document.getElementById("stripe-button").addEventListener("click", async () => {
+    // Create a test Checkout session inline
+    const { error } = await stripe.redirectToCheckout({
+      lineItems: [{ price: "price_test_diamond_plan", quantity: 1 }], // replace with real Stripe price ID
+      mode: "payment",
+      successUrl: window.location.href + "?success=true",
+      cancelUrl: window.location.href + "?canceled=true",
     });
-    handler.openIframe(); // opens the inline popup
-}
+
+    if (error) {
+      console.error(error);
+      alert("Stripe Checkout failed: " + error.message);
+    }
+  });
+
+  // PayPal SDK
+  const PAYPAL_CLIENT_ID = "BAAQcVUbEKNwGhzFE9XggYcsAry02fNwd-m6U9NWdtWD_BwquRJLbZZUjvmDZBDp6rnL9i6Twm85ZLO-14";
+  const script = document.createElement("script");
+  script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
+  script.onload = () => {
+    paypal.Buttons({
+      style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'paypal' },
+      createOrder: (data, actions) => actions.order.create({
+        purchase_units: [{ amount: { value: '449.00' } }]
+      }),
+      onApprove: (data, actions) => actions.order.capture().then(details => {
+        alert("Payment completed! Transaction ID: " + details.id);
+      }),
+      onCancel: () => alert("Payment cancelled"),
+      onError: err => console.error(err)
+    }).render('#paypal-button-container');
+  };
+  document.body.appendChild(script);
 </script>
